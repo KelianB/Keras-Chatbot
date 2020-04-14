@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import gc
 from sklearn.model_selection import train_test_split
 #from keras.callbacks import EarlyStopping
@@ -10,10 +9,13 @@ from model import ChatbotModel
 
 EPOCHS = 30
 BATCH_SIZE = 512
-n_val = 2000
 num_subsets = 10
+n_val = 2000
 
 weights_file = "model_weights.h5"
+
+# If true, the model will be initialized with the weights from the line above.
+resume_training = False
 
 """
 def get_response(model, inp, index_to_word):
@@ -75,8 +77,11 @@ def train():
     embedding_matrix = utils.read_embedding_matrix(index_to_word)
 
     # Create the model
-    model = ChatbotModel(embedding_matrix=embedding_matrix)
-
+    if resume_training:
+        model = ChatbotModel(weights_file=weights_file)
+    else:
+        model = ChatbotModel(embedding_matrix=embedding_matrix)
+    
     # Load the data
     q, a = utils.read_training_sequences()
 

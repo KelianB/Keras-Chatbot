@@ -12,16 +12,16 @@ EOS_VOCAB_INDEX = 2
 SENTENCE_EMBEDDING_SIZE = 128
 WORD_EMBEDDING_SIZE = 50
 
-## File paths
+# File paths
 
-# Dataset
+## Dataset
 CORNELL_MOVIE_LINES_FILE = "cornell-corpus/movie_lines.txt"
 CORNELL_CONVERSATIONS_FILE = "cornell-corpus/movie_conversations.txt"
 
-# Word embeddings
+## Word embeddings
 GLOVE_FILE = "glove.6B.50d.txt" 
 
-# Processed data outputs
+## Processed data outputs
 VOC_FILE = "processed-data/vocabulary.txt"
 CONTEXT_FILE = "processed-data/context.txt"
 ANSWERS_FILE = "processed-data/answers.txt"
