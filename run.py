@@ -12,7 +12,10 @@ np.random.seed(1337)
 index_to_word, word_to_index = utils.read_vocabulary()
 
 # Init our keras model and load the weights from file
-weights_file = "model_weights_halftrain_acc62.h5"
+#weights_file = "model_weights_low-training-acc33.h5"
+#weights_file = "model_weights_halfway-training-acc62.h5"
+weights_file = "model_weights_overfit-training-acc86.h5"
+
 model = ChatbotModel(weights_file=weights_file)
 print("Model loaded.")
 
