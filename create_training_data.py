@@ -8,6 +8,7 @@ import textprocessor
 
 PROP_SEPARATOR = "+++$+++"
 
+
 """ Create a dictionary of movie_line_id:movie_line_text entries """ 
 def create_movie_lines_dict():
     lines_file = open(cfg.CORNELL_MOVIE_LINES_FILE, encoding="iso-8859-1")
@@ -25,6 +26,7 @@ def create_movie_lines_dict():
         
     lines_file.close()
     return lines
+
 
 """ Create the vocabulary from the movie lines, as tuple index_to_word, word_to_index """
 def create_vocab(output_file_name, lines, vocab_size):
@@ -54,6 +56,7 @@ def create_vocab(output_file_name, lines, vocab_size):
 
     return index_to_word, word_to_index
 
+
 """ Get the list of conversations from the dataset, as lists of movie lines. """
 def read_conversations(idx_to_movie_line):
     conversation_file = open(cfg.CORNELL_CONVERSATIONS_FILE, encoding="utf8")
@@ -68,6 +71,7 @@ def read_conversations(idx_to_movie_line):
     
     conversation_file.close()
     return conversations
+
 
 def create_context_answers(conversations, context_output_file, answers_output_file):
     context = []
@@ -108,6 +112,7 @@ def create_context_answers(conversations, context_output_file, answers_output_fi
     
     return context, answers
 
+
 def create_context_answers_sequences(context, answers, word_to_index, context_seq_output_file, answers_seq_output_file):
     answers = ["BOS " + sent + " EOS" for sent in answers]
 
@@ -124,12 +129,12 @@ def create_context_answers_sequences(context, answers, word_to_index, context_se
         tokenized_answers[i] = [w if w in word_to_index else TOKEN_UNKNOWN for w in sent]
     """
 
-    def filter_tokens(items_1, items_2, filter_function_1, filter_function_2, print_str):
+    def filter_tokens(items_1, items_2, filter_function, print_str):
         filtered_1 = []
         filtered_2 = []
         for i in range(len(items_1)):
             x1, x2 = items_1[i], items_2[i]
-            if (not filter_function_1(x1)) and (not filter_function_2(x2)):
+            if (not filter_function(x1)) and (not filter_function(x2)):
                 filtered_1.append(x1)
                 filtered_2.append(x2)
 
@@ -140,10 +145,7 @@ def create_context_answers_sequences(context, answers, word_to_index, context_se
         
         return filtered_1, filtered_2
     
-    tokenized_context, tokenized_answers = filter_tokens(
-        tokenized_context, 
-        tokenized_answers, 
-        lambda x: len(x) > cfg.MAX_SEQUENCE_LENGTH,
+    tokenized_context, tokenized_answers = filter_tokens(tokenized_context, tokenized_answers, 
         lambda x: len(x) > cfg.MAX_SEQUENCE_LENGTH,
         "entries with either context or answer sentences larger than max sequence length."
     )
@@ -154,12 +156,8 @@ def create_context_answers_sequences(context, answers, word_to_index, context_se
                 return True
         return False
 
-    tokenized_context, tokenized_answers = filter_tokens(
-        tokenized_context, 
-        tokenized_answers, 
-        is_outside_vocab,
-        is_outside_vocab,
-        "entries with either context or answer sentences out of vocabulary."
+    tokenized_context, tokenized_answers = filter_tokens(tokenized_context, tokenized_answers, 
+        is_outside_vocab, "entries with either context or answer sentences out of vocabulary."
     )
 
     # Creating the training data:
@@ -182,14 +180,16 @@ def create_context_answers_sequences(context, answers, word_to_index, context_se
     con_file.close()
     ans_file.close()
 
-print("Creating dict of movie lines...")
-movie_lines_dict = create_movie_lines_dict()
-print("Reading conversations file...")
-conversations = read_conversations(movie_lines_dict)
-print("Creating context and answers...")
-context, answers = create_context_answers(conversations, cfg.CONTEXT_FILE, cfg.ANSWERS_FILE)
-print("Creating vocabulary...")
-index_to_word, word_to_index = create_vocab(cfg.VOC_FILE, context + answers, cfg.VOCABULARY_SIZE)
 
-create_context_answers_sequences(context, answers, word_to_index, cfg.CONTEXT_SEQ_FILE, cfg.ANSWERS_SEQ_FILE)
-print("Done!")
+if __name__ == "__main__":
+    print("Creating dict of movie lines...")
+    movie_lines_dict = create_movie_lines_dict()
+    print("Reading conversations file...")
+    conversations = read_conversations(movie_lines_dict)
+    print("Creating context and answers...")
+    context, answers = create_context_answers(conversations, cfg.CONTEXT_FILE, cfg.ANSWERS_FILE)
+    print("Creating vocabulary...")
+    index_to_word, word_to_index = create_vocab(cfg.VOC_FILE, context + answers, cfg.VOCABULARY_SIZE)
+
+    create_context_answers_sequences(context, answers, word_to_index, cfg.CONTEXT_SEQ_FILE, cfg.ANSWERS_SEQ_FILE)
+    print("Done!")

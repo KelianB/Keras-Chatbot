@@ -2,6 +2,7 @@ import numpy as np
 
 import config as cfg
 
+
 def read_vocabulary():
     with open(cfg.VOC_FILE) as voc_file:
         index_to_word = [line.strip() for line in voc_file]
@@ -10,6 +11,7 @@ def read_vocabulary():
         word_to_index = dict([(w,i) for i,w in enumerate(index_to_word)])
 
         return index_to_word, word_to_index
+
 
 def read_training_sequences():
     with open(cfg.CONTEXT_SEQ_FILE) as context_file:
@@ -21,6 +23,7 @@ def read_training_sequences():
         answers_file.close()
 
     return np.array(context_sequences), np.array(answers_sequences)
+
 
 def read_embedding_matrix(index_to_word):
     embeddings_index = {}
@@ -50,6 +53,7 @@ def read_embedding_matrix(index_to_word):
     del embeddings_index
 
     return embedding_matrix
+
 
 def seq_to_text(indices, index_to_word):
     text = ""

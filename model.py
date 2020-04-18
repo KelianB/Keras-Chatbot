@@ -5,7 +5,7 @@ from tensorflow.keras.models import Model
 
 import config as cfg
 
-LEARNING_RATE = 0.0025
+LEARNING_RATE = 0.001
 
 class ChatbotModel(Model):
   def __init__(self, weights_file=None, embedding_matrix=None):
@@ -34,7 +34,8 @@ class ChatbotModel(Model):
     self.merge_layer = layers.Concatenate(axis=1)
     
     # Fully-connected layers
-    self.dense1 = layers.Dense(cfg.VOCABULARY_SIZE // 4, activation="relu")
+    self.dense1 = layers.Dense(cfg.VOCABULARY_SIZE // 2, activation="relu")
+    #self.batchnorm = layers.BatchNormalization()
     self.dense2 = layers.Dense(cfg.VOCABULARY_SIZE, activation="softmax")
     
     self.compile(
@@ -47,6 +48,7 @@ class ChatbotModel(Model):
         self.predict([np.zeros((1, cfg.MAX_SEQUENCE_LENGTH)), np.zeros((1, cfg.MAX_SEQUENCE_LENGTH))])
         self.load_weights(weights_file)
 
+
   def call(self, inputs):
     x_context = self.embedding_context(inputs[0])
     x_context = self.lstm_context(x_context)
@@ -56,6 +58,7 @@ class ChatbotModel(Model):
 
     merged = self.merge_layer([x_context, x_answer])
     out = self.dense1(merged)
+    #out = self.batchnorm(out)
     out = self.dense2(out)
 
     return out

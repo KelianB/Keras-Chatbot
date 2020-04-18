@@ -25,11 +25,12 @@ REPLACEMENT_DICT = {
     "c'mon": "come on",
     "stayin'": "staying",
     "rollin'": "rolling",
+    "doin'": "doing",
     "can't": "cannot",
     "ain't": "are not",
     "n't": " not",
     
-    #"'s": ' is', # breaks possessive
+    #"'s": ' is', # avoid: breaks possessive
     "he's": "he is",
     "she's": "she is",
     "that's": "that is",
@@ -60,6 +61,10 @@ REPLACEMENT_DICT = {
 }
 repl_by_space_dict = ["-", "_", " *", " /", "* ", "/ ", "\"", "--"]
 
+"""
+    Cleans up the given text to normalize syntax.
+    Returned text is lower case, striped, and most word contractions are expanded.
+"""
 def cleanup(text):
     if len(text) == 0:
         return ""
@@ -87,11 +92,7 @@ def cleanup(text):
     while len(text) > 1 and text[0] in punctuation:
         text = text[1:].strip()
 
-    # Fix occurences of ".word" (have to be careful with acronyms)
-    
     return text
-
-
 
 
 """ Processes a query before it is given as input to the bot. """
@@ -100,8 +101,6 @@ def preprocess_query(text, name):
 
     if len(text) == 0:
         return ""
-
-    # at this point the text is all lower case, striped and word contractions are normalized
 
     # Normalize names
     text = text.replace(", " + cfg.BOT_NAME, "")
@@ -127,8 +126,6 @@ def postprocess_response(text, name):
     if len(text) == 0:
         return ""
 
-    # at this point the text is all lower case, striped and word contractions are normalized
-
     # Normalize names
     for person_name in NAMES:
         text = text.replace(", " + person_name, ", " + name)
@@ -136,6 +133,7 @@ def postprocess_response(text, name):
         text = text.replace("i am " + person_name, "i am " + cfg.BOT_NAME)
         text = text.replace("my name is " + person_name, "my name is " + cfg.BOT_NAME)
 
+    # Make sure the sentence ends with a period, an exclamation mark or a question mark
     if text[-1] != "!" and text[-1] != "?" and text[-1] != ".":
         text += "."
 
@@ -146,5 +144,8 @@ def postprocess_response(text, name):
             non_punctuation += 1
     if non_punctuation == 0:
         text = "what?"
-      
+    
+    # Remove space before punctuation
+    text = re.sub(r"( +)(?=[?.!:,])", "", text)
+
     return text
