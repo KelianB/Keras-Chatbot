@@ -9,7 +9,7 @@ import textprocessor
 PROP_SEPARATOR = "+++$+++"
 
 
-""" Create a dictionary of movie_line_id:movie_line_text entries """ 
+""" Create a dictionary of movie_line_id:movie_line_text entries. """ 
 def create_movie_lines_dict():
     lines_file = open(cfg.CORNELL_MOVIE_LINES_FILE, encoding="iso-8859-1")
 
@@ -28,10 +28,14 @@ def create_movie_lines_dict():
     return lines
 
 
-""" Create the vocabulary from the movie lines, as tuple index_to_word, word_to_index """
+""" 
+    Create the vocabulary from the movie lines.
+    Return a tuple: index_to_word (list), word_to_index (dict).
+"""
 def create_vocab(output_file_name, lines, vocab_size):
     extra_tokens = [cfg.TOKEN_NONE, "BOS", "EOS", cfg.TOKEN_UNKNOWN]
     
+    # Compute most common words
     vocab = Counter()
     print("Computing most common words in dataset...")
     for text in lines:
@@ -57,7 +61,10 @@ def create_vocab(output_file_name, lines, vocab_size):
     return index_to_word, word_to_index
 
 
-""" Get the list of conversations from the dataset, as lists of movie lines. """
+""" 
+    Get a list of conversations from the dataset.
+    Each conversation is a list of movie lines in order.
+"""
 def read_conversations(idx_to_movie_line):
     conversation_file = open(cfg.CORNELL_CONVERSATIONS_FILE, encoding="utf8")
     conversations = []
@@ -73,6 +80,10 @@ def read_conversations(idx_to_movie_line):
     return conversations
 
 
+"""
+    Create a list of cleaned-up context and answers and output them to their respective files.
+    Returns tuple: context (list), answers (list)
+"""
 def create_context_answers(conversations, context_output_file, answers_output_file):
     context = []
     answers = []
@@ -95,7 +106,7 @@ def create_context_answers(conversations, context_output_file, answers_output_fi
     for conv in conversations:
         for i in range(1, len(conv)):
             if len(conv[i]) > 0 and len(conv[i-1]) > 0:
-                context.append(conv[i-1]) # TODO Add conv[i-2] before?
+                context.append(conv[i-1])
                 answers.append(conv[i])
     
     # Output to files
@@ -113,6 +124,7 @@ def create_context_answers(conversations, context_output_file, answers_output_fi
     return context, answers
 
 
+""" Convert the given answers and context into sequences of integers, and output to respective files. """
 def create_context_answers_sequences(context, answers, word_to_index, context_seq_output_file, answers_seq_output_file):
     answers = ["BOS " + sent + " EOS" for sent in answers]
 

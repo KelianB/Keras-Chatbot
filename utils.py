@@ -2,7 +2,7 @@ import numpy as np
 
 import config as cfg
 
-""" Read the vocabulary from file, as a tuple of index_to_word array, word_to_index dict. """
+""" Read the vocabulary from file, as a tuple of index_to_word (list), word_to_index (dict). """
 def read_vocabulary():
     with open(cfg.VOC_FILE) as voc_file:
         index_to_word = [line.strip() for line in voc_file]

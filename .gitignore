@@ -2,6 +2,7 @@ cornell-corpus/*.txt
 glove.6B.50d.txt
 processed-data/context.txt
 processed-data/answers.txt
+*.h5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

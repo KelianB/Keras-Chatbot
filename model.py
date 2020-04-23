@@ -5,8 +5,6 @@ from tensorflow.keras.models import Model
 
 import config as cfg
 
-LEARNING_RATE = 0.001
-
 class ChatbotModel(Model):
   def __init__(self, weights_file=None, embedding_matrix=None):
     super(ChatbotModel, self).__init__()
@@ -40,7 +38,7 @@ class ChatbotModel(Model):
     
     self.compile(
         loss="categorical_crossentropy", 
-        optimizer=optimizers.Adam(lr=LEARNING_RATE),
+        optimizer=optimizers.Adam(lr=cfg.LEARNING_RATE),
         metrics=["accuracy"]
     )
 
