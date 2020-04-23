@@ -4,7 +4,10 @@ A conversational chatbot written in Python using Tensorflow / Keras.
 Our sequence-to-sequence model is trained on the cornell movie-dialogs corpus to come up with answers using context.
 
 ## Running the chatbot
-Simply run `python run.py` to start the trained chatbot.
+
+You first have to download the trained weghts [here](https://www.dropbox.com/sh/o0mftjwjt3ghjtd/AACixBf3HxeacOUf8g8bF3rAa?dl=0) The recommended model (and the one used by default) is model_weights_overfit-training-acc86.h5. It has heavy overfitting but seems to provide the most interesting interaction. 
+
+Include the .h5 file at the project root and simply run `python run.py` to start the trained chatbot.
 
 ### Requirements
 The bot was written for Python 3.6.9, using Tensorflow v2.2 and NLTK v3.2.5.
