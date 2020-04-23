@@ -5,7 +5,7 @@ Our sequence-to-sequence model is trained on the cornell movie-dialogs corpus to
 
 ## Running the chatbot
 
-You first have to download the trained weghts [here](https://www.dropbox.com/sh/o0mftjwjt3ghjtd/AACixBf3HxeacOUf8g8bF3rAa?dl=0) The recommended model (and the one used by default) is model_weights_overfit-training-acc86.h5. It has heavy overfitting but seems to provide the most interesting interaction. 
+You first have to download the trained weights [here](https://www.dropbox.com/sh/o0mftjwjt3ghjtd/AACixBf3HxeacOUf8g8bF3rAa?dl=0). The recommended file (used by default) is model_weights_overfit-training-acc86.h5. It has heavy overfitting but seems to provide the most interesting interactions. 
 
 Include the .h5 file at the project root and simply run `python run.py` to start the trained chatbot.
 
