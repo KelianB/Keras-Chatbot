@@ -20,13 +20,13 @@ class ChatbotModel(Model):
     self.input_context = layers.Input(shape=(cfg.MAX_SEQUENCE_LENGTH,), dtype="int32")
     self.embedding_context = embedding
     # LSTM encoder
-    self.lstm_context = layers.LSTM(cfg.SENTENCE_EMBEDDING_SIZE, kernel_initializer="lecun_uniform") 
+    self.lstm_context = layers.LSTM(cfg.LSTM_UNITS, kernel_initializer="lecun_uniform") 
 
     # Input 2: Answer
     self.input_answer = layers.Input(shape=(cfg.MAX_SEQUENCE_LENGTH,), dtype="int32")
     self.embedding_answer = embedding
     # LSTM decoder
-    self.lstm_answer = layers.LSTM(cfg.SENTENCE_EMBEDDING_SIZE, kernel_initializer="lecun_uniform")
+    self.lstm_answer = layers.LSTM(cfg.LSTM_UNITS, kernel_initializer="lecun_uniform")
     
     # Merge the inputs
     self.merge_layer = layers.Concatenate(axis=1)
